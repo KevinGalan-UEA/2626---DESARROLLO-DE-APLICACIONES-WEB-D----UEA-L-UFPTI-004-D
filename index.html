@@ -4,88 +4,270 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Híbrido Ganador - Domótica y Redes</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f4f6f9;
+            color: #212529;
+        }
+
+        header {
+            background-color: #0f4c81;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #0f4c81, #1d2d44);
+            color: white;
+            padding: 50px 20px;
+            border-radius: 15px;
+        }
+
+        .card-servicio {
+            border: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .card-servicio:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 15px rgba(15, 48, 81, 0.12);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        aside {
+            background: #fff;
+            border-left: 4px solid #0f4c81;
+            border-radius: 6px;
+        }
+
+        footer {
+            background-color: #212529;
+            color: #a8aeb4;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 30px 15px;
+            }
+            aside {
+                border-left: none;
+                border-top: 4px solid #0f4c81;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <header>
-        <h1>El Híbrido Ganador</h1>
-        <nav>
-            <ul>
-                <li><a href="#inicio">Inicio</a></li>
-                <li><a href="#quienes-somos">Quiénes Somos</a></li>
-                <li><a href="#servicios">Servicios o Productos</a></li>
-                <li><a href="#contacto">Contacto</a></li>
-            </ul>
+    <header class="sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark container">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold text-uppercase" href="#">
+                    <i class="bi bi-cpu text-warning me-2"></i>El Híbrido Ganador
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="menuNavegacion">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link active" href="#inicio">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#quienes-somos">Quiénes Somos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+            </div>
         </nav>
     </header>
 
-    <main>
-        
-        <section id="inicio">
-            <h2>Inicio</h2>
-            <p>Bienvenidos a <strong>El Híbrido Ganador</strong>, la solución integral para la evolución tecnológica de tu hogar y negocio. Nos especializamos en la instalación de redes de alta velocidad, optimización de routers y automatización de espacios para brindarte el máximo confort y la seguridad que te mereces.</p>
-        </section>
+    <div class="container my-4 text-center">
+        <div class="hero shadow-sm">
+            <h1 class="display-5 fw-bold mb-3">TechConnect</h1>
+            <p class="lead px-3">
+                Plataforma para la gestión de clientes, cotizaciones y soporte técnico en instalación de redes, seguridad y automatización residencial.
+            </p>
+            <span class="badge bg-warning text-dark p-2">Desarrollado por Kevin Eduardo Galán Calderón</span>
+        </div>
+    </div>
 
-        <hr>
-
-        <section id="quienes-somos">
-            <h2>Quiénes Somos</h2>
-            <article>
-                <p>El Híbrido Ganador es un proyecto tecnológico e innovador enfocado en transformar los hogares y entornos de trabajo convencionales en espacios inteligentes y altamente conectados. Nacemos con el firme propósito de optimizar la infraestructura de red y seguridad en nuestra comunidad, ofreciendo un servicio técnico especializado de alta calidad. Nos dedicamos a la implementación de sistemas de domótica avanzada, automatización residencial y configuración de redes cableadas e inalámbricas de alto rendimiento utilizando marcas líderes del mercado. Nuestra visión es garantizar que cada cliente disfrute de una conectividad fluida, segura y eficiente, adaptando soluciones a la medida de sus necesidades y asegurando que la tecnología trabaje a su favor en el día a día.</p>
-            </article>
+    <main class="container mb-5">
+        <div class="row g-4">
             
-            <h3>Nuestra Infraestructura</h3>
-            <img src="redes.jpg" alt="Instalación de redes y seguridad de El Híbrido Ganador" width="600">
-        </section>
+            <div class="col-lg-8">
+                
+                <section id="inicio" class="card p-4 mb-4 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h3 border-bottom pb-2 text-primary fw-bold mb-3">Inicio</h2>
+                        <p class="card-text fs-5 text-muted">
+                            Bienvenidos a <strong>El Híbrido Ganador</strong>, la solución integral para la evolución tecnológica de tu hogar y negocio. Nos especializamos en la instalación de redes de alta velocidad, optimización de routers y automatización de espacios para brindarte el máximo confort y la seguridad que te mereces.
+                        </p>
+                        <div class="mt-3">
+                            <a href="#servicios" class="btn btn-primary me-2">Ver Servicios</a>
+                            <a href="#contacto" class="btn btn-outline-secondary">Cotizar ahora</a>
+                        </div>
+                    </div>
+                </section>
 
-        <hr>
+                <section id="quienes-somos" class="card p-4 mb-4 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h3 border-bottom pb-2 text-primary fw-bold mb-3">Quiénes Somos</h2>
+                        <article class="mb-4">
+                            <p class="text-muted" style="text-align: justify;">
+                                El Híbrido Ganador es un proyecto tecnológico e innovador enfocado en transformar los hogares y entornos de trabajo convencionales en espacios inteligentes y altamente conectados. Nacemos con el firme propósito de optimizar la infraestructura de red y seguridad en nuestra comunidad, ofreciendo un servicio técnico especializado de alta calidad. Nos dedicamos a la implementación de sistemas de domótica avanzada, automatización residencial y configuración de redes cableadas e inalámbricas de alto rendimiento utilizando marcas líderes del mercado. Nuestra visión es garantizar que cada cliente disfrute de una conectividad fluida, segura y eficiente, adaptando soluciones a la medida de sus necesidades y asegurando que la tecnología trabaje a su favor en el día a día.
+                            </p>
+                        </article>
+                        
+                        <h3 class="h5 fw-bold mb-3">Nuestra Infraestructura</h3>
+                        <div class="text-center">
+                            <img src="redes.jpg" alt="Instalación de redes y seguridad" class="img-fluid rounded shadow-sm w-100">
+                        </div>
+                    </div>
+                </section>
 
-        <section id="servicios">
-            <h2>Servicios o Productos</h2>
-            <p>Ofrecemos soluciones tecnológicas avanzadas para la conectividad y seguridad de tu inmueble:</p>
-            <ul>
-                <li><strong>Optimización de Conectividad:</strong> Configuración y despliegue de routers de alta gama (Cudy, TP-Link) para eliminar zonas sin señal.</li>
-                <li><strong>Sistemas de Videovigilancia:</strong> Instalación profesional de cámaras con tecnología Power over Ethernet (PoE) para monitoreo continuo.</li>
-                <li><strong>Domótica y Automatización:</strong> Integración de iluminación, cerraduras y dispositivos inteligentes controlados por aplicaciones móviles.</li>
-                <li><strong>Soporte Técnico de Redes:</strong> Cableado estructurado y diagnóstico de problemas de conectividad en redes domésticas y empresariales.</li>
-            </ul>
+                <section id="servicios" class="card p-4 mb-4 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h3 border-bottom pb-2 text-primary fw-bold mb-3">Servicios o Productos</h2>
+                        <p class="text-muted mb-4">Ofrecemos soluciones tecnológicas avanzadas para la conectividad y seguridad de tu inmueble:</p>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="card h-100 bg-light card-servicio p-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold text-dark"><i class="bi bi-router me-2 text-primary"></i>Optimización de Conectividad</h5>
+                                        <p class="card-text text-muted small">Configuración y despliegue de routers de alta gama (Cudy, TP-Link) para eliminar zonas sin señal.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 bg-light card-servicio p-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold text-dark"><i class="bi bi-shield-lock me-2 text-primary"></i>Sistemas de Videovigilancia</h5>
+                                        <p class="card-text text-muted small">Instalación profesional de cámaras con tecnología Power over Ethernet (PoE) para monitoreo continuo.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 bg-light card-servicio p-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold text-dark"><i class="bi bi-lightbulb me-2 text-primary"></i>Domótica y Automatización</h5>
+                                        <p class="card-text text-muted small">Integración de iluminación, cerraduras y dispositivos inteligentes controlados por aplicaciones móviles.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 bg-light card-servicio p-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold text-dark"><i class="bi bi-tools me-2 text-primary"></i>Soporte Técnico de Redes</h5>
+                                        <p class="card-text text-muted small">Cableado estructurado y diagnóstico de problemas de conectividad en redes domésticas y empresariales.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-            <h3>¿Sabes qué es la domótica? - Conoce sus beneficios</h3>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/5SGyidsfNmI" title="¿Sabes qué es la domótica? - El Híbrido Ganador" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        </section>
+                        <h3 class="h5 fw-bold mt-4 mb-3">¿Sabes qué es la domótica? - Conoce sus beneficios</h3>
+                        <div class="video-wrapper shadow-sm">
+                            <iframe src="https://www.youtube.com/embed/5SGyidsfNmI" title="¿Sabes qué es la domótica?" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </section>
 
-        <hr>
+                <section id="contacto" class="card p-4 mb-4 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h3 border-bottom pb-2 text-primary fw-bold mb-3">Contacto</h2>
+                        <p class="text-muted">¿Listo para transformar tu entorno? Comunícate con nosotros o envíanos un mensaje directo:</p>
+                        
+                        <div class="row g-4 mt-2">
+                            <div class="col-md-5">
+                                <div class="mb-3">
+                                    <span class="text-uppercase text-muted small fw-bold">Correo Electrónico</span>
+                                    <p><a href="mailto:correo-ejemplo@dominio.com" class="text-decoration-none">correo-ejemplo@dominio.com</a></p>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-uppercase text-muted small fw-bold">Teléfono de Soporte</span>
+                                    <p><a href="tel:+593999999999" class="text-decoration-none">+593 99 999 9999</a></p>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-uppercase text-muted small fw-bold">Dirección Principal</span>
+                                    <p class="text-muted">Ciudad de Ejemplo, Ecuador</p>
+                                </div>
+                                <div class="mt-4">
+                                    <p class="small fw-bold text-secondary mb-2">Nuestras Redes:</p>
+                                    <a href="https://www.facebook.com" target="_blank" class="btn btn-sm btn-outline-primary me-2">Facebook</a>
+                                    <a href="https://www.instagram.com" target="_blank" class="btn btn-sm btn-outline-danger">Instagram</a>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-7">
+                                <form action="#" method="POST" class="p-3 bg-light rounded border">
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" placeholder="Nombre completo" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="email" class="form-control" placeholder="Correo electrónico" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" placeholder="Asunto" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <textarea class="form-control" rows="3" placeholder="Escribe tu mensaje aquí..." required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Enviar Formulario</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-        <section id="contacto">
-            <h2>Contacto</h2>
-            <p>¿Listo para transformar tu entorno? Comunícate con nosotros por cualquiera de nuestros canales oficiales:</p>
-            <ul>
-                <li><strong>Correo Electrónico:</strong> <a href="mailto:correo-ejemplo@dominio.com">correo-ejemplo@dominio.com</a></li>
-                <li><strong>Teléfono de Soporte:</strong> <a href="tel:+593999999999">+593 99 999 9999</a></li>
-                <li><strong>Dirección Principal:</strong> Ciudad de Ejemplo, Ecuador</li>
-                <li><strong>Síguenos en Redes Sociales:</strong> 
-                    <a href="https://www.facebook.com" target="_blank">Facebook</a> | 
-                    <a href="https://www.instagram.com" target="_blank">Instagram</a>
-                </li>
-            </ul>
-        </section>
+            </div>
 
+            <div class="col-lg-4">
+                <aside class="p-4 mb-4 border-0 shadow-sm sticky-lg-top" style="top: 85px;">
+                    <h3 class="h5 fw-bold text-dark border-bottom pb-2 mb-3">Horarios de Atención</h3>
+                    <p class="mb-1 small"><strong>Lunes a Viernes:</strong></p>
+                    <p class="text-muted small">08:00 AM - 06:00 PM</p>
+                    <p class="mb-1 small"><strong>Sábados:</strong></p>
+                    <p class="text-muted small">09:00 AM - 02:00 PM</p>
+                    
+                    <div class="bg-warning bg-opacity-10 p-3 rounded border border-warning mt-4">
+                        <h4 class="h6 fw-bold text-dark mb-2"><i class="bi bi-lightning-fill text-warning me-1"></i>Promoción Especial</h4>
+                        <p class="small text-muted mb-0">
+                            ¡Obtén un 10% de descuento en la configuración de tus cámaras de seguridad PoE durante todo este mes!
+                        </p>
+                    </div>
+                </aside>
+            </div>
+
+        </div>
     </main>
 
-    <aside>
-        <h3>Horarios de Atención</h3>
-        <p>Lunes a Viernes: 08:00 AM - 06:00 PM</p>
-        <p>Sábados: 09:00 AM - 02:00 PM</p>
-        <hr>
-        <h3>Promoción Especial</h3>
-        <p>¡Obtén un 10% de descuento en la configuración de tus cámaras de seguridad PoE durante todo este mes!</p>
-    </aside>
-
-    <footer>
-        <p>&copy; 2026 - <strong>Kevin Eduardo Galán Calderón</strong></p>
-        <p>Asignatura: Desarrollo de Aplicaciones Web</p>
-        <p>Universidad Estatal Amazónica</p>
+    <footer class="text-center py-4">
+        <div class="container">
+            <p class="mb-1 fw-bold text-white">&copy; 2026 - Kevin Eduardo Galán Calderón</p>
+            <p class="mb-1 small">Desarrollo de Aplicaciones Web | Parallels D / L</p>
+            <p class="mb-0 small">Universidad Estatal Amazónica</p>
+        </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
