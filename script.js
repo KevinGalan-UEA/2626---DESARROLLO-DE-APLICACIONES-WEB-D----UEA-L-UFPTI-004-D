@@ -7,68 +7,94 @@ const contenedorLista = document.getElementById('contenedorLista');
 const contadorSolicitudes = document.getElementById('contadorSolicitudes');
 const mensajeVacio = document.getElementById('mensajeVacio');
 
-// Contador global para rastrear las solicitudes creadas
 let totalRegistros = 0;
 
-// 2. Manejo de Eventos: Evento 'submit' del formulario
-formulario.addEventListener('submit', function(evento) {
-    // Uso de preventDefault() para evitar que se recargue el navegador
-    evento.preventDefault();
+// Función de validación mejorada
+function validarCampo(input, mostrarVerde = false) {
+    let esValido = false;
 
-    // Obtener valores de los campos limpiando espacios sobrantes
-    const nombreVal = nombreCliente.value.trim();
-    const servicioVal = tipoServicio.value;
-    const descripcionVal = descripcionProblema.value.trim();
-
-    // 3. Validación básica para verificar que los campos no estén vacíos
-    if (nombreVal === "" || servicioVal === "" || descripcionVal === "") {
-        alert("Por favor, complete todos los campos para registrar la solicitud.");
-        return; // Detiene la ejecución
+    // Lógica de validación
+    if (input.id === 'nombreCliente') {
+        esValido = input.value.trim().length >= 5;
+    } else if (input.id === 'tipoServicio') {
+        esValido = input.value !== "";
+    } else if (input.id === 'descripcionProblema') {
+        esValido = input.value.trim().length >= 10;
     }
 
-    // Ocultar mensaje por defecto si existe la primera tarjeta
+    // Lógica de estilos
+    if (!esValido) {
+        input.classList.remove('is-valid');
+        input.classList.add('is-invalid');
+    } else if (mostrarVerde) {
+        input.classList.remove('is-invalid');
+        input.classList.add('is-valid');
+    } else {
+        // Solo quitamos el error mientras escribe, no forzamos el verde
+        input.classList.remove('is-invalid');
+    }
+    
+    return esValido;
+}
+
+// 2. Eventos: Input (limpieza) y Blur (validación final)
+const campos = [nombreCliente, tipoServicio, descripcionProblema];
+
+campos.forEach(campo => {
+    // Mientras escribe, solo limpiamos el error si se corrige
+    campo.addEventListener('input', () => validarCampo(campo, false));
+    
+    // Al salir, ahí sí validamos y mostramos el check verde
+    campo.addEventListener('blur', () => validarCampo(campo, true));
+});
+
+// 3. Envío del formulario
+formulario.addEventListener('submit', function(evento) {
+    evento.preventDefault();
+
+    // Validar todo al hacer click en enviar
+    const vNombre = validarCampo(nombreCliente, true);
+    const vServicio = validarCampo(tipoServicio, true);
+    const vDesc = validarCampo(descripcionProblema, true);
+
+    if (!vNombre || !vServicio || !vDesc) {
+        return; 
+    }
+
+    // --- Lógica de creación ---
     if (totalRegistros === 0) {
         mensajeVacio.style.display = 'none';
     }
 
-    // 4. Manipulación del DOM: Uso de createElement()
     const colDiv = document.createElement('div');
     colDiv.className = 'col-12';
 
-    // Inserción estructurada aplicando clases y estilos responsivos de Bootstrap
     colDiv.innerHTML = `
         <div class="card border-start border-primary border-4 p-3 bg-light shadow-sm position-relative">
-            <h6 class="fw-bold text-dark mb-1">${nombreVal}</h6>
-            <span class="badge bg-primary text-wrap mb-2" style="max-width: fit-content;">${servicioVal}</span>
-            <p class="small text-muted mb-2">${descripcionVal}</p>
+            <h6 class="fw-bold text-dark mb-1">${nombreCliente.value.trim()}</h6>
+            <span class="badge bg-primary text-wrap mb-2" style="max-width: fit-content;">${tipoServicio.value}</span>
+            <p class="small text-muted mb-2">${descripcionProblema.value.trim()}</p>
             <button class="btn btn-sm btn-outline-danger btn-eliminar position-absolute top-50 end-0 translate-middle-y me-3">
                 <i class="bi bi-trash-fill"></i> Eliminar
             </button>
         </div>
     `;
 
-    // 5. Manejo de Eventos: Eliminar registros mediante el evento 'click'
     const botonEliminar = colDiv.querySelector('.btn-eliminar');
     botonEliminar.addEventListener('click', function() {
-        colDiv.remove(); // Remueve el nodo del DOM
-        
-        // Actualizar contador decreciente
+        colDiv.remove();
         totalRegistros--;
         contadorSolicitudes.textContent = totalRegistros;
-
-        // Mostrar el mensaje original si ya no quedan registros
         if (totalRegistros === 0) {
             mensajeVacio.style.display = 'block';
         }
     });
 
-    // 6. Manipulación del DOM: Uso de appendChild() para inyectar la tarjeta
     contenedorLista.appendChild(colDiv);
-
-    // 7. Mostrar en pantalla el total de registros creados actualizando el contador
     totalRegistros++;
     contadorSolicitudes.textContent = totalRegistros;
 
-    // Limpiar el formulario para un nuevo ingreso de datos
+    // Resetear form y quitar validaciones verdes
     formulario.reset();
+    campos.forEach(c => c.classList.remove('is-valid'));
 });
