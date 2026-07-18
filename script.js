@@ -7,9 +7,21 @@ const contenedorLista = document.getElementById('contenedorLista');
 const contadorSolicitudes = document.getElementById('contadorSolicitudes');
 const mensajeVacio = document.getElementById('mensajeVacio');
 
-let totalRegistros = 0;
+// Elementos nuevos para el spinner y la alerta de Bootstrap
+const btnRegistrar = document.getElementById('btnRegistrar');
+const spinnerRegistrar = document.getElementById('spinnerRegistrar');
+const textoBtnRegistrar = document.getElementById('textoBtnRegistrar');
+const alertaExito = document.getElementById('alertaExito');
+const alertaExitoTexto = document.getElementById('alertaExitoTexto');
 
-// Función de validación mejorada
+// Instancias de los modales de Bootstrap
+const modalDetalle = new bootstrap.Modal(document.getElementById('modalDetalle'));
+const modalConfirmarEliminar = new bootstrap.Modal(document.getElementById('modalConfirmarEliminar'));
+
+let totalRegistros = 0;
+let colDivPendienteEliminar = null; // Guarda la tarjeta que se quiere eliminar mientras se confirma
+
+// Función de validación mejorada (se conserva igual que en la Semana 6)
 function validarCampo(input, mostrarVerde = false) {
     let esValido = false;
 
@@ -33,7 +45,7 @@ function validarCampo(input, mostrarVerde = false) {
         // Solo quitamos el error mientras escribe, no forzamos el verde
         input.classList.remove('is-invalid');
     }
-    
+
     return esValido;
 }
 
@@ -43,7 +55,7 @@ const campos = [nombreCliente, tipoServicio, descripcionProblema];
 campos.forEach(campo => {
     // Mientras escribe, solo limpiamos el error si se corrige
     campo.addEventListener('input', () => validarCampo(campo, false));
-    
+
     // Al salir, ahí sí validamos y mostramos el check verde
     campo.addEventListener('blur', () => validarCampo(campo, true));
 });
@@ -58,43 +70,102 @@ formulario.addEventListener('submit', function(evento) {
     const vDesc = validarCampo(descripcionProblema, true);
 
     if (!vNombre || !vServicio || !vDesc) {
-        return; 
+        return;
     }
 
-    // --- Lógica de creación ---
+    // Guardamos los valores antes de que el formulario se resetee
+    const datosSolicitud = {
+        nombre: nombreCliente.value.trim(),
+        servicio: tipoServicio.value,
+        descripcion: descripcionProblema.value.trim()
+    };
+
+    // --- Spinner Bootstrap: simula el envío/procesamiento de la solicitud ---
+    spinnerRegistrar.classList.remove('d-none');
+    textoBtnRegistrar.textContent = 'Registrando...';
+    btnRegistrar.disabled = true;
+    alertaExito.classList.add('d-none');
+
+    setTimeout(() => {
+        crearTarjetaSolicitud(datosSolicitud);
+
+        // Ocultar spinner y restaurar el botón
+        spinnerRegistrar.classList.add('d-none');
+        textoBtnRegistrar.textContent = 'Registrar Solicitud';
+        btnRegistrar.disabled = false;
+
+        // Mostrar alerta Bootstrap de éxito
+        alertaExitoTexto.textContent = `¡Solicitud de "${datosSolicitud.nombre}" registrada correctamente!`;
+        alertaExito.classList.remove('d-none');
+        setTimeout(() => alertaExito.classList.add('d-none'), 3500);
+
+        // Resetear form y quitar validaciones verdes
+        formulario.reset();
+        campos.forEach(c => c.classList.remove('is-valid'));
+    }, 900); // simula ~0.9s de procesamiento
+});
+
+// --- Lógica de creación de la tarjeta (renderizado dinámico, Semana 7) ---
+function crearTarjetaSolicitud(datos) {
     if (totalRegistros === 0) {
         mensajeVacio.style.display = 'none';
     }
+
+    const fechaRegistro = new Date().toLocaleString('es-EC', {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+    });
 
     const colDiv = document.createElement('div');
     colDiv.className = 'col-12';
 
     colDiv.innerHTML = `
-        <div class="card border-start border-primary border-4 p-3 bg-light shadow-sm position-relative">
-            <h6 class="fw-bold text-dark mb-1">${nombreCliente.value.trim()}</h6>
-            <span class="badge bg-primary text-wrap mb-2" style="max-width: fit-content;">${tipoServicio.value}</span>
-            <p class="small text-muted mb-2">${descripcionProblema.value.trim()}</p>
-            <button class="btn btn-sm btn-outline-danger btn-eliminar position-absolute top-50 end-0 translate-middle-y me-3">
-                <i class="bi bi-trash-fill"></i> Eliminar
-            </button>
+        <div class="card border-start border-primary border-4 p-3 bg-light shadow-sm">
+            <h6 class="fw-bold text-dark mb-1">${datos.nombre}</h6>
+            <span class="badge bg-primary text-wrap mb-2" style="max-width: fit-content;">${datos.servicio}</span>
+            <p class="small text-muted mb-2">${datos.descripcion}</p>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-sm btn-outline-primary btn-detalle">
+                    <i class="bi bi-eye-fill"></i> Ver detalles
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger btn-eliminar">
+                    <i class="bi bi-trash-fill"></i> Eliminar
+                </button>
+            </div>
         </div>
     `;
 
-    const botonEliminar = colDiv.querySelector('.btn-eliminar');
-    botonEliminar.addEventListener('click', function() {
-        colDiv.remove();
-        totalRegistros--;
-        contadorSolicitudes.textContent = totalRegistros;
-        if (totalRegistros === 0) {
-            mensajeVacio.style.display = 'block';
-        }
+    // Botón "Ver detalles" -> abre el modal Bootstrap con la información completa
+    colDiv.querySelector('.btn-detalle').addEventListener('click', function() {
+        document.getElementById('detalleNombre').textContent = datos.nombre;
+        document.getElementById('detalleServicio').textContent = datos.servicio;
+        document.getElementById('detalleDescripcion').textContent = datos.descripcion;
+        document.getElementById('detalleFecha').textContent = fechaRegistro;
+        modalDetalle.show();
+    });
+
+    // Botón "Eliminar" -> abre el modal de confirmación en lugar de borrar directo
+    colDiv.querySelector('.btn-eliminar').addEventListener('click', function() {
+        colDivPendienteEliminar = colDiv;
+        document.getElementById('nombreAEliminar').textContent = datos.nombre;
+        modalConfirmarEliminar.show();
     });
 
     contenedorLista.appendChild(colDiv);
     totalRegistros++;
     contadorSolicitudes.textContent = totalRegistros;
+}
 
-    // Resetear form y quitar validaciones verdes
-    formulario.reset();
-    campos.forEach(c => c.classList.remove('is-valid'));
+// Confirmar eliminación desde el modal Bootstrap
+document.getElementById('btnConfirmarEliminar').addEventListener('click', function() {
+    if (colDivPendienteEliminar) {
+        colDivPendienteEliminar.remove();
+        totalRegistros--;
+        contadorSolicitudes.textContent = totalRegistros;
+        if (totalRegistros === 0) {
+            mensajeVacio.style.display = 'block';
+        }
+        colDivPendienteEliminar = null;
+    }
+    modalConfirmarEliminar.hide();
 });

@@ -4,78 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Híbrido Ganador - Domótica y Redes</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
-    <style>
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: #f4f6f9;
-            color: #212529;
-        }
-
-        header {
-            background-color: #0f4c81;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .hero {
-            background: linear-gradient(135deg, #0f4c81, #1d2d44);
-            color: white;
-            padding: 50px 20px;
-            border-radius: 15px;
-        }
-
-        .card-servicio {
-            border: none;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .card-servicio:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 15px rgba(15, 48, 81, 0.12);
-        }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 12px;
-        }
-
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        aside {
-            background: #fff;
-            border-left: 4px solid #0f4c81;
-            border-radius: 6px;
-        }
-
-        footer {
-            background-color: #212529;
-            color: #a8aeb4;
-        }
-
-        @media (max-width: 768px) {
-            .hero {
-                padding: 30px 15px;
-            }
-            aside {
-                border-left: none;
-                border-top: 4px solid #0f4c81;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -112,9 +44,9 @@
 
     <main class="container mb-5">
         <div class="row g-4">
-            
+
             <div class="col-lg-8">
-                
+
                 <section id="inicio" class="card p-4 mb-4 border-0 shadow-sm">
                     <div class="card-body">
                         <h2 class="h3 border-bottom pb-2 text-primary fw-bold mb-3">Inicio</h2>
@@ -136,7 +68,7 @@
                                 El Híbrido Ganador es un proyecto tecnológico e innovador enfocado en transformar los hogares y entornos de trabajo convencionales en espacios inteligentes y altamente conectados. Nacemos con el firme propósito de optimizar la infraestructura de red y seguridad en nuestra comunidad, ofreciendo un servicio técnico especializado de alta calidad. Nos dedicamos a la implementación de sistemas de domótica avanzada, automatización residencial y configuración de redes cableadas e inalámbricas de alto rendimiento utilizando marcas líderes del mercado. Nuestra visión es garantizar que cada cliente disfrute de una conectividad fluida, segura y eficiente, adaptando soluciones a la medida de sus necesidades y asegurando que la tecnología trabaje a su favor en el día a día.
                             </p>
                         </article>
-                        
+
                         <h3 class="h5 fw-bold mb-3">Nuestra Infraestructura</h3>
                         <div class="text-center">
                             <img src="redes.jpg" alt="Instalación de redes y seguridad" class="img-fluid rounded shadow-sm w-100">
@@ -148,7 +80,7 @@
                     <div class="card-body">
                         <h2 class="h3 border-bottom pb-2 text-primary fw-bold mb-3">Servicios o Productos</h2>
                         <p class="text-muted mb-4">Ofrecemos soluciones tecnológicas avanzadas para la conectividad y seguridad de tu inmueble:</p>
-                        
+
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="card h-100 bg-light card-servicio p-2">
@@ -195,7 +127,7 @@
                     <div class="card-body">
                         <h2 class="h3 border-bottom pb-2 text-primary fw-bold mb-3">Contacto</h2>
                         <p class="text-muted">¿Listo para transformar tu entorno? Comunícate con nosotros o envíanos un mensaje directo:</p>
-                        
+
                         <div class="row g-4 mt-2">
                             <div class="col-md-5">
                                 <div class="mb-3">
@@ -216,38 +148,55 @@
                                     <a href="https://www.instagram.com" target="_blank" class="btn btn-sm btn-outline-danger">Instagram</a>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-7">
                                 <form id="formSolicitudes" class="p-3 bg-light rounded border mb-4" novalidate>
                                     <h4 class="h6 fw-bold text-dark mb-3 text-center text-uppercase">Registrar Solicitud de Servicio</h4>
-                                    
-                                    <div class="mb-3">
-                                        <input type="text" id="nombreCliente" class="form-control" placeholder="Nombre completo del cliente">
-                                        <div class="invalid-feedback">El nombre es obligatorio (mínimo 3 caracteres).</div>
+
+                                    <!-- Alerta Bootstrap de éxito -->
+                                    <div id="alertaExito" class="alert alert-success alert-dismissible fade show d-none" role="alert">
+                                        <i class="bi bi-check-circle-fill me-2"></i>
+                                        <span id="alertaExitoTexto">¡Solicitud registrada correctamente!</span>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                                     </div>
-                                    
-                                    <div class="mb-3">
-                                        <select id="tipoServicio" class="form-select">
-                                            <option value="">Seleccione el tipo de servicio...</option>
-                                            <option value="Optimización de Conectividad">Optimización de Conectividad</option>
-                                            <option value="Sistemas de Videovigilancia">Sistemas de Videovigilancia</option>
-                                            <option value="Domótica y Automatización">Domótica y Automatización</option>
-                                            <option value="Soporte Técnico de Redes">Soporte Técnico de Redes</option>
-                                        </select>
-                                        <div class="invalid-feedback">Por favor, selecciona una opción válida.</div>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label for="nombreCliente" class="form-label">Nombre completo del cliente</label>
+                                            <input type="text" id="nombreCliente" class="form-control" placeholder="Ej. Juan Pérez">
+                                            <div class="invalid-feedback">El nombre es obligatorio (mínimo 5 caracteres).</div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="tipoServicio" class="form-label">Tipo de servicio</label>
+                                            <select id="tipoServicio" class="form-select">
+                                                <option value="">Seleccione el tipo de servicio...</option>
+                                                <option value="Optimización de Conectividad">Optimización de Conectividad</option>
+                                                <option value="Sistemas de Videovigilancia">Sistemas de Videovigilancia</option>
+                                                <option value="Domótica y Automatización">Domótica y Automatización</option>
+                                                <option value="Soporte Técnico de Redes">Soporte Técnico de Redes</option>
+                                            </select>
+                                            <div class="invalid-feedback">Por favor, selecciona una opción válida.</div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="descripcionProblema" class="form-label">Descripción del requerimiento</label>
+                                            <textarea id="descripcionProblema" class="form-control" rows="3" placeholder="Describe brevemente tu requerimiento o problema..."></textarea>
+                                            <div class="invalid-feedback">La descripción debe tener al menos 10 caracteres.</div>
+                                        </div>
+
+                                        <div class="col-12 d-grid">
+                                            <button type="submit" class="btn btn-primary" id="btnRegistrar">
+                                                <span id="spinnerRegistrar" class="spinner-border spinner-border-sm me-2 d-none" role="status" aria-hidden="true"></span>
+                                                <span id="textoBtnRegistrar">Registrar Solicitud</span>
+                                            </button>
+                                        </div>
                                     </div>
-                                    
-                                    <div class="mb-3">
-                                        <textarea id="descripcionProblema" class="form-control" rows="3" placeholder="Descripción del requerimiento o problema..."></textarea>
-                                        <div class="invalid-feedback">La descripción debe tener al menos 10 caracteres.</div>
-                                    </div>
-                                    
-                                    <button type="submit" class="btn btn-primary w-100">Registrar Solicitud</button>
                                 </form>
 
                                 <div class="card border-0 shadow-sm p-3 bg-white">
                                     <h4 class="h6 fw-bold text-primary mb-3">
-                                        Solicitudes Registradas 
+                                        Solicitudes Registradas
                                         <span id="contadorSolicitudes" class="badge bg-secondary ms-2">0</span>
                                     </h4>
                                     <div id="contenedorLista" class="row g-2">
@@ -267,7 +216,7 @@
                     <p class="text-muted small">08:00 AM - 06:00 PM</p>
                     <p class="mb-1 small"><strong>Sábados:</strong></p>
                     <p class="text-muted small">09:00 AM - 02:00 PM</p>
-                    
+
                     <div class="bg-warning bg-opacity-10 p-3 rounded border border-warning mt-4">
                         <h4 class="h6 fw-bold text-dark mb-2"><i class="bi bi-lightning-fill text-warning me-1"></i>Promoción Especial</h4>
                         <p class="small text-muted mb-0">
@@ -287,6 +236,46 @@
             <p class="mb-0 small">Universidad Estatal Amazónica</p>
         </div>
     </footer>
+
+    <!-- Modal: Detalle de una solicitud -->
+    <div class="modal fade" id="modalDetalle" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalDetalleLabel"><i class="bi bi-info-circle me-2"></i>Detalle de la Solicitud</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-2"><strong>Cliente:</strong> <span id="detalleNombre"></span></p>
+                    <p class="mb-2"><strong>Servicio:</strong> <span id="detalleServicio"></span></p>
+                    <p class="mb-2"><strong>Descripción:</strong> <span id="detalleDescripcion"></span></p>
+                    <p class="mb-0"><strong>Fecha de registro:</strong> <span id="detalleFecha"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirmar eliminación -->
+    <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="modalConfirmarEliminarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="modalConfirmarEliminarLabel"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar eliminación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">¿Estás seguro de que deseas eliminar la solicitud de <strong id="nombreAEliminar"></strong>? Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">Sí, eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
