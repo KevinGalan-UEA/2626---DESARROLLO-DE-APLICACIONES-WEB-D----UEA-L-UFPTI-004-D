@@ -4,10 +4,37 @@
 {% block content %}
 <div class="container mt-4 mb-5">
     <h2>Módulo de Clientes</h2>
-    <p>Gestión y registro de clientes del sistema.</p>
-    <table class="table table-striped">
-        <thead><tr><th>ID</th><th>Nombre</th><th>Correo</th></tr></thead>
-        <tbody><tr><td>1</td><td>Juan Pérez</td><td>juan@mail.com</td></tr></tbody>
+    <p>Gestión y registro de clientes del sistema. Total registrados: {{ total_clientes }}</p>
+
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente.id }}</td>
+                <td>{{ cliente.nombre }}</td>
+                <td>{{ cliente.correo|lower }}</td>
+                <td>{{ cliente.telefono }}</td>
+                <td>{{ cliente.direccion }}</td>
+                <td>
+                    {% if cliente.activo %}
+                        <span class="badge bg-success">Activo</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Inactivo</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </div>
 {% endblock %}

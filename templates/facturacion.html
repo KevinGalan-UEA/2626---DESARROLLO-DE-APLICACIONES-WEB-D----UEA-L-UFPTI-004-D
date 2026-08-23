@@ -4,6 +4,19 @@
 {% block content %}
 <div class="container mt-4 mb-5">
     <h2>Módulo de Facturación</h2>
-    <p>Esta sección se actualizará próximamente.</p>
+    <p>Factura N° {{ factura.numero }}</p>
+
+    <ul class="list-group">
+        <li class="list-group-item"><strong>Cliente:</strong> {{ factura.cliente }}</li>
+        <li class="list-group-item"><strong>Total:</strong> ${{ factura.total }}</li>
+        <li class="list-group-item">
+            <strong>Estado:</strong>
+            {% if factura.estado == "Pendiente" %}
+                <span class="badge bg-warning text-dark">{{ factura.estado }}</span>
+            {% else %}
+                <span class="badge bg-success">{{ factura.estado }}</span>
+            {% endif %}
+        </li>
+    </ul>
 </div>
 {% endblock %}

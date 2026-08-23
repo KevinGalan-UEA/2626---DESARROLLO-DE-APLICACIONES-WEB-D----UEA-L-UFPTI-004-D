@@ -4,10 +4,23 @@
 {% block content %}
 <div class="container mt-4 mb-5">
     <h2>Módulo de Productos</h2>
-    <p>Lista de productos disponibles en el sistema (Datos demostrativos).</p>
-    <ul class="list-group">
-        <li class="list-group-item">Producto 1 - $10.00</li>
-        <li class="list-group-item">Producto 2 - $25.50</li>
-    </ul>
-</div>
-{% endblock %}
+    <p>Catálogo de productos disponibles en el sistema (Datos demostrativos).</p>
+
+    <div class="row g-3">
+        {% for producto in productos %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <span class="badge bg-secondary mb-2">{{ producto.categoria }}</span>
+                    <h5 class="card-title">{{ producto.nombre|upper }}</h5>
+                    <p class="card-text">Precio: ${{ producto.precio }}</p>
+                    {% if producto.stock > 0 %}
+                        <span class="badge bg-success">Disponible ({{ producto.stock }} unidades)</span>
+                    {% else %}
+                        <span class="badge bg-danger">Agotado</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
