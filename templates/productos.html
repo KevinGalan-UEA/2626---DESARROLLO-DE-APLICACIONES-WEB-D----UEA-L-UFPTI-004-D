@@ -8,8 +8,7 @@
             <h2 class="mb-0">Módulo de Productos</h2>
             <p class="mb-0">Catálogo de productos disponibles en el sistema.</p>
         </div>
-        <!-- Quitamos temporalmente el url_for dinámico para que no dé error de compilación -->
-        <a href="#" class="btn btn-primary">
+        <a href="{{ url_for('nuevo_producto') }}" class="btn btn-primary">
             <i class="bi bi-plus-circle me-1"></i>Nuevo producto
         </a>
     </div>
