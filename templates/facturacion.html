@@ -13,9 +13,9 @@
     {% for factura in facturas %}
     <div class="card mb-3 shadow-sm">
         <div class="card-body">
-            <h5 class="card-title">Factura N° {{ factura.numero }}</h5>
+            <h5 class="card-title">Factura N° F-{{ '%04d'|format(factura.id_factura) }}</h5>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item"><strong>Cliente:</strong> {{ factura.cliente }}</li>
+                <li class="list-group-item"><strong>Cliente:</strong> {{ factura.cliente_nombre }}</li>
                 <li class="list-group-item"><strong>Total:</strong> ${{ "%.2f"|format(factura.total) }}</li>
                 <li class="list-group-item">
                     <strong>Estado:</strong>

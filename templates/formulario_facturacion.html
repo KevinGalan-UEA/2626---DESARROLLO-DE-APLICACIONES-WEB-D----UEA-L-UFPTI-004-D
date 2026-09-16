@@ -11,9 +11,9 @@
                     {{ form.hidden_tag() }}
 
                     <div class="mb-3">
-                        {{ form.cliente.label(class="form-label") }}
-                        {{ form.cliente(class="form-control" + (" is-invalid" if form.cliente.errors else "")) }}
-                        {% for error in form.cliente.errors %}
+                        {{ form.id_cliente.label(class="form-label") }}
+                        {{ form.id_cliente(class="form-select" + (" is-invalid" if form.id_cliente.errors else "")) }}
+                        {% for error in form.id_cliente.errors %}
                             <div class="invalid-feedback">{{ error }}</div>
                         {% endfor %}
                     </div>

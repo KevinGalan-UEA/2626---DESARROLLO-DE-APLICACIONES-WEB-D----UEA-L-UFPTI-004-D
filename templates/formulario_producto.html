@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}El Híbrido Ganador - Nuevo Producto{% endblock %}
+{% block title %}El Híbrido Ganador - {{ 'Editar Producto' if modo == 'editar' else 'Nuevo Producto' }}{% endblock %}
 
 {% block content %}
 <div class="container mt-4 mb-5">
     <div class="row justify-content-center">
         <div class="col-lg-6">
             <div class="card shadow-sm p-4">
-                <h2 class="h4 mb-4">Registrar Producto</h2>
+                <h2 class="h4 mb-4">{{ 'Editar Producto' if modo == 'editar' else 'Registrar Producto' }}</h2>
                 <form method="POST" novalidate>
                     {{ form.hidden_tag() }}
 

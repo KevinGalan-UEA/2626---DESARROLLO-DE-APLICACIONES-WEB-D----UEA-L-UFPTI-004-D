@@ -13,23 +13,45 @@
         </a>
     </div>
 
-    <div class="row g-3">
-        {% for producto in productos %}
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <span class="badge bg-secondary mb-2">{{ producto.categoria }}</span>
-                    <h5 class="card-title">{{ producto.nombre|upper }}</h5>
-                    <p class="card-text">Precio: ${{ "%.2f"|format(producto.precio) }}</p>
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th class="text-end">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ producto.id_producto }}</td>
+                <td>{{ producto.nombre|upper }}</td>
+                <td><span class="badge bg-secondary">{{ producto.categoria }}</span></td>
+                <td>${{ "%.2f"|format(producto.precio) }}</td>
+                <td>
                     {% if producto.stock > 0 %}
-                        <span class="badge bg-success">Disponible ({{ producto.stock }} unidades)</span>
+                        <span class="badge bg-success">{{ producto.stock }} unidades</span>
                     {% else %}
                         <span class="badge bg-danger">Agotado</span>
                     {% endif %}
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
+                </td>
+                <td class="text-end">
+                    <a href="{{ url_for('editar_producto', id_producto=producto.id_producto) }}" class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                    <form method="POST" action="{{ url_for('eliminar_producto', id_producto=producto.id_producto) }}" class="d-inline" onsubmit="return confirm('¿Seguro que deseas eliminar este producto?');">
+                        {{ delete_form.hidden_tag() }}
+                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

@@ -1,13 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, DecimalField, SelectField, SubmitField
-from wtforms.validators import DataRequired, Length, NumberRange
+from wtforms import SelectField, DecimalField, SubmitField
+from wtforms.validators import DataRequired, NumberRange
 
 
 class FacturacionForm(FlaskForm):
-    cliente = StringField(
-        'Nombre del cliente',
-        validators=[DataRequired(message='El nombre del cliente es obligatorio.'),
-                    Length(min=3, max=100, message='Debe tener entre 3 y 100 caracteres.')]
+    id_cliente = SelectField(
+        'Cliente',
+        coerce=int,
+        validators=[DataRequired(message='Selecciona un cliente.')]
     )
     total = DecimalField(
         'Total ($)',
