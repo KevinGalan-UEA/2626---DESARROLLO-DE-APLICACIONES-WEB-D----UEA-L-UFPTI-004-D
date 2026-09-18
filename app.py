@@ -1,17 +1,34 @@
 from types import SimpleNamespace
 
+import mysql.connector
 from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from conexion.conexion import obtener_conexion
+from models import Usuario
 from forms.producto_form import ProductoForm
 from forms.cliente_form import ClienteForm
 from forms.facturacion_form import FacturacionForm
+from forms.login_form import LoginForm
+from forms.usuario_form import UsuarioForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'clave-secreta-hibrido-ganador-2026'  # cámbiala antes de producción
 csrf = CSRFProtect(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+login_manager.login_message = 'Debes iniciar sesión para acceder a esta página.'
+login_manager.login_message_category = 'warning'
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Usuario.obtener_por_id(user_id)
 
 
 class AccionForm(FlaskForm):
@@ -32,9 +49,73 @@ def index():
 
 
 # ---------------------------------------------------------
-# Clientes — listar y agregar, ahora desde MySQL
+# Autenticación
+# ---------------------------------------------------------
+@app.route('/registro', methods=['GET', 'POST'])
+def registro():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+
+    form = UsuarioForm()
+    if form.validate_on_submit():
+        password_hash = generate_password_hash(form.password.data)
+        conn = obtener_conexion()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(
+                'INSERT INTO usuarios (usuario, password) VALUES (%s, %s)',
+                (form.usuario.data, password_hash)
+            )
+            conn.commit()
+            flash(f'Usuario "{form.usuario.data}" registrado correctamente. Ya puedes iniciar sesión.', 'success')
+            return redirect(url_for('login'))
+        except mysql.connector.IntegrityError:
+            conn.rollback()
+            flash('Ese nombre de usuario ya existe. Elige otro.', 'danger')
+        finally:
+            cursor.close()
+            conn.close()
+
+    return render_template('registro.html', form=form)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+
+    form = LoginForm()
+    if form.validate_on_submit():
+        fila = Usuario.obtener_por_usuario(form.usuario.data)
+        if fila and check_password_hash(fila['password'], form.password.data):
+            usuario_obj = Usuario(id=fila['id'], usuario=fila['usuario'])
+            login_user(usuario_obj)
+            flash(f'Bienvenido, {usuario_obj.usuario}.', 'success')
+            return redirect(url_for('dashboard'))
+        flash('Usuario o contraseña incorrectos.', 'danger')
+
+    return render_template('login.html', form=form)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Sesión cerrada correctamente.', 'success')
+    return redirect(url_for('login'))
+
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
+
+
+# ---------------------------------------------------------
+# Clientes (protegido)
 # ---------------------------------------------------------
 @app.route('/clientes')
+@login_required
 def clientes():
     conn = obtener_conexion()
     cursor = conn.cursor(dictionary=True)
@@ -46,6 +127,7 @@ def clientes():
 
 
 @app.route('/clientes/nuevo', methods=['GET', 'POST'])
+@login_required
 def nuevo_cliente():
     form = ClienteForm()
     if form.validate_on_submit():
@@ -64,9 +146,10 @@ def nuevo_cliente():
 
 
 # ---------------------------------------------------------
-# Productos — CRUD completo con MySQL (SELECT, INSERT, UPDATE, DELETE)
+# Productos (protegido) — CRUD completo con MySQL
 # ---------------------------------------------------------
 @app.route('/productos')
+@login_required
 def productos():
     conn = obtener_conexion()
     cursor = conn.cursor(dictionary=True)
@@ -78,6 +161,7 @@ def productos():
 
 
 @app.route('/productos/nuevo', methods=['GET', 'POST'])
+@login_required
 def nuevo_producto():
     form = ProductoForm()
     if form.validate_on_submit():
@@ -96,6 +180,7 @@ def nuevo_producto():
 
 
 @app.route('/productos/editar/<int:id_producto>', methods=['GET', 'POST'])
+@login_required
 def editar_producto(id_producto):
     conn = obtener_conexion()
     cursor = conn.cursor(dictionary=True)
@@ -130,6 +215,7 @@ def editar_producto(id_producto):
 
 
 @app.route('/productos/eliminar/<int:id_producto>', methods=['POST'])
+@login_required
 def eliminar_producto(id_producto):
     conn = obtener_conexion()
     cursor = conn.cursor()
@@ -142,9 +228,10 @@ def eliminar_producto(id_producto):
 
 
 # ---------------------------------------------------------
-# Facturación — listar (con JOIN a Clientes) y agregar, desde MySQL
+# Facturación (protegido) — con JOIN a Clientes
 # ---------------------------------------------------------
 @app.route('/facturacion')
+@login_required
 def facturacion():
     conn = obtener_conexion()
     cursor = conn.cursor(dictionary=True)
@@ -161,6 +248,7 @@ def facturacion():
 
 
 @app.route('/facturacion/nueva', methods=['GET', 'POST'])
+@login_required
 def nueva_factura():
     conn = obtener_conexion()
     cursor = conn.cursor(dictionary=True)

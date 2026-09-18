@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}El Híbrido Ganador - Iniciar sesión{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="card shadow-sm p-4">
+                <h2 class="h4 mb-4 text-center">Iniciar sesión</h2>
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.usuario.label(class="form-label") }}
+                        {{ form.usuario(class="form-control" + (" is-invalid" if form.usuario.errors else "")) }}
+                        {% for error in form.usuario.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+                        {% for error in form.password.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+                <p class="text-center mt-3 mb-0">
+                    ¿No tienes cuenta? <a href="{{ url_for('registro') }}">Regístrate aquí</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

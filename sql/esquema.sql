@@ -1,3 +1,5 @@
+-- Esquema de base de datos - El Híbrido Ganador
+
 CREATE DATABASE IF NOT EXISTS hibrido_ganador_db;
 USE hibrido_ganador_db;
 
@@ -28,6 +30,13 @@ CREATE TABLE IF NOT EXISTS facturas (
     FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
 );
 
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+-- Datos de demostración (solo se insertan la primera vez que se ejecuta todo el script)
 INSERT INTO clientes (nombre, correo, telefono, direccion, activo) VALUES
 ('Juan Pérez', 'juan@mail.com', '0991234567', 'Av. Amazonas y Naciones Unidas, Puyo', TRUE),
 ('María Gómez', 'maria@mail.com', '0987654321', 'Barrio Central, Puyo', TRUE),
