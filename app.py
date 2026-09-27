@@ -1,6 +1,8 @@
+import os
 from types import SimpleNamespace
 
-import mysql.connector
+import psycopg2
+import psycopg2.extras
 from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect
@@ -16,7 +18,7 @@ from forms.login_form import LoginForm
 from forms.usuario_form import UsuarioForm
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'clave-secreta-hibrido-ganador-2026'  # cámbiala antes de producción
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'clave-secreta-hibrido-ganador-2026')
 csrf = CSRFProtect(app)
 
 login_manager = LoginManager()
@@ -69,7 +71,7 @@ def registro():
             conn.commit()
             flash(f'Usuario "{form.usuario.data}" registrado correctamente. Ya puedes iniciar sesión.', 'success')
             return redirect(url_for('login'))
-        except mysql.connector.IntegrityError:
+        except psycopg2.IntegrityError:
             conn.rollback()
             flash('Ese nombre de usuario ya existe. Elige otro.', 'danger')
         finally:
@@ -118,7 +120,7 @@ def dashboard():
 @login_required
 def clientes():
     conn = obtener_conexion()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cursor.execute('SELECT * FROM clientes ORDER BY id_cliente')
     clientes_bd = cursor.fetchall()
     cursor.close()
@@ -146,14 +148,19 @@ def nuevo_cliente():
 
 
 # ---------------------------------------------------------
-# Productos (protegido) — CRUD completo con MySQL
+# Productos (protegido) — CRUD completo + JOIN a categorías
 # ---------------------------------------------------------
 @app.route('/productos')
 @login_required
 def productos():
     conn = obtener_conexion()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM productos ORDER BY id_producto')
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor.execute('''
+        SELECT p.id_producto, p.nombre, p.precio, p.stock, c.nombre AS categoria_nombre
+        FROM productos p
+        JOIN categorias c ON p.id_categoria = c.id_categoria
+        ORDER BY p.id_producto
+    ''')
     productos_bd = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -163,19 +170,28 @@ def productos():
 @app.route('/productos/nuevo', methods=['GET', 'POST'])
 @login_required
 def nuevo_producto():
+    conn = obtener_conexion()
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor.execute('SELECT id_categoria, nombre FROM categorias ORDER BY nombre')
+    categorias_bd = cursor.fetchall()
+    cursor.close()
+
     form = ProductoForm()
+    form.id_categoria.choices = [(c['id_categoria'], c['nombre']) for c in categorias_bd]
+
     if form.validate_on_submit():
-        conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute(
-            'INSERT INTO productos (nombre, categoria, precio, stock, imagen) VALUES (%s, %s, %s, %s, %s)',
-            (form.nombre.data, form.categoria.data, float(form.precio.data), form.stock.data, 'default.jpg')
+            'INSERT INTO productos (nombre, id_categoria, precio, stock, imagen) VALUES (%s, %s, %s, %s, %s)',
+            (form.nombre.data, form.id_categoria.data, float(form.precio.data), form.stock.data, 'default.jpg')
         )
         conn.commit()
         cursor.close()
         conn.close()
         flash(f'Producto "{form.nombre.data}" registrado correctamente.', 'success')
         return redirect(url_for('productos'))
+
+    conn.close()
     return render_template('formulario_producto.html', form=form, modo='nuevo')
 
 
@@ -183,7 +199,10 @@ def nuevo_producto():
 @login_required
 def editar_producto(id_producto):
     conn = obtener_conexion()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor.execute('SELECT id_categoria, nombre FROM categorias ORDER BY nombre')
+    categorias_bd = cursor.fetchall()
+
     cursor.execute('SELECT * FROM productos WHERE id_producto = %s', (id_producto,))
     producto_bd = cursor.fetchone()
     cursor.close()
@@ -198,11 +217,13 @@ def editar_producto(id_producto):
     else:
         form = ProductoForm()
 
+    form.id_categoria.choices = [(c['id_categoria'], c['nombre']) for c in categorias_bd]
+
     if form.validate_on_submit():
         cursor = conn.cursor()
         cursor.execute(
-            'UPDATE productos SET nombre = %s, categoria = %s, precio = %s, stock = %s WHERE id_producto = %s',
-            (form.nombre.data, form.categoria.data, float(form.precio.data), form.stock.data, id_producto)
+            'UPDATE productos SET nombre = %s, id_categoria = %s, precio = %s, stock = %s WHERE id_producto = %s',
+            (form.nombre.data, form.id_categoria.data, float(form.precio.data), form.stock.data, id_producto)
         )
         conn.commit()
         cursor.close()
@@ -234,7 +255,7 @@ def eliminar_producto(id_producto):
 @login_required
 def facturacion():
     conn = obtener_conexion()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cursor.execute('''
         SELECT f.id_factura, f.total, f.estado, f.fecha, c.nombre AS cliente_nombre
         FROM facturas f
@@ -251,7 +272,7 @@ def facturacion():
 @login_required
 def nueva_factura():
     conn = obtener_conexion()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cursor.execute('SELECT id_cliente, nombre FROM clientes ORDER BY nombre')
     clientes_bd = cursor.fetchall()
     cursor.close()

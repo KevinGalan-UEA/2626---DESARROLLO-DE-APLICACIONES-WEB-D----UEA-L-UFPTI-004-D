@@ -9,13 +9,9 @@ class ProductoForm(FlaskForm):
         validators=[DataRequired(message='El nombre es obligatorio.'),
                     Length(min=3, max=100, message='Debe tener entre 3 y 100 caracteres.')]
     )
-    categoria = SelectField(
+    id_categoria = SelectField(
         'Categoría',
-        choices=[
-            ('Conectividad', 'Conectividad'),
-            ('Videovigilancia', 'Videovigilancia'),
-            ('Domótica', 'Domótica')
-        ],
+        coerce=int,
         validators=[DataRequired(message='Selecciona una categoría.')]
     )
     precio = DecimalField(

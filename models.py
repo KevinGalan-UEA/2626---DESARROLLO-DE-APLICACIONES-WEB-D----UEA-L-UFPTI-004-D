@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+from psycopg2.extras import RealDictCursor
 from conexion.conexion import obtener_conexion
 
 
@@ -10,7 +11,7 @@ class Usuario(UserMixin):
     @staticmethod
     def obtener_por_id(user_id):
         conn = obtener_conexion()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute('SELECT id, usuario FROM usuarios WHERE id = %s', (user_id,))
         fila = cursor.fetchone()
         cursor.close()
@@ -22,7 +23,7 @@ class Usuario(UserMixin):
     @staticmethod
     def obtener_por_usuario(nombre_usuario):
         conn = obtener_conexion()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute('SELECT id, usuario, password FROM usuarios WHERE usuario = %s', (nombre_usuario,))
         fila = cursor.fetchone()
         cursor.close()

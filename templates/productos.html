@@ -29,7 +29,7 @@
             <tr>
                 <td>{{ producto.id_producto }}</td>
                 <td>{{ producto.nombre|upper }}</td>
-                <td><span class="badge bg-secondary">{{ producto.categoria }}</span></td>
+                <td><span class="badge bg-secondary">{{ producto.categoria_nombre }}</span></td>
                 <td>${{ "%.2f"|format(producto.precio) }}</td>
                 <td>
                     {% if producto.stock > 0 %}

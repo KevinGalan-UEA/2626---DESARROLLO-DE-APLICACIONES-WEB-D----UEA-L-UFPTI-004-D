@@ -19,9 +19,9 @@
                     </div>
 
                     <div class="mb-3">
-                        {{ form.categoria.label(class="form-label") }}
-                        {{ form.categoria(class="form-select" + (" is-invalid" if form.categoria.errors else "")) }}
-                        {% for error in form.categoria.errors %}
+                        {{ form.id_categoria.label(class="form-label") }}
+                        {{ form.id_categoria(class="form-select" + (" is-invalid" if form.id_categoria.errors else "")) }}
+                        {% for error in form.id_categoria.errors %}
                             <div class="invalid-feedback">{{ error }}</div>
                         {% endfor %}
                     </div>
